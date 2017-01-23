@@ -48,11 +48,16 @@ func NewXmpp(ns *netswitches.NetSwitches) *Xmpp {
 }
 
 func (x *Xmpp) initMachinesList(retries int) (err error) {
+	waitTime := time.Second
 	for i := 0; retries <= 0 || i < retries; i++ {
 		if err != nil {
 			log.Printf("gateway: Init: %v", err)
-			log.Printf("gateway: Init: retrying in 5 seconds")
-			<-time.After(5 * time.Second)
+			waitTime *= 2
+			if waitTime > 30*time.Second {
+				waitTime = 30 * time.Second
+			}
+			log.Printf("gateway: Init: retrying in %v seconds", waitTime)
+			<-time.After(waitTime)
 			err = nil
 		}
 		if err = x.ns.Load(x.client); err != nil {
