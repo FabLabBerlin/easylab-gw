@@ -27,4 +27,8 @@ It communicates mostly via XMPP so it is secured through TLS. Configuration happ
 	./easylab-gw
 ```
 
+## mPower mFi plugs
+
+After setting up a smart plug, login as ubnt / ubnt through SSH and change the password using `passwd`.
+
 Credit goes to [Datanoise](https://github.com/DatanoiseTV) for concept of OpenWRT integration and using XMPP which allows for lightweight TLS usage.
