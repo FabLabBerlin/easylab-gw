@@ -11,6 +11,28 @@ stages:
 cache:
   paths:
     - gopath/
+    
+release-i386:
+  stage: release
+  cache:
+    paths:
+      - gopath/
+      - node_modules/
+      - .glide/
+      - .npm/
+  artifacts:
+    paths:
+      - ./easylab-gw
+  script:
+    - export GOPATH=$CI_PROJECT_DIR/gopath/
+    - export GOROOT=/goroot
+    - apt-get update && apt-get install -y upx
+    - go get gopkg.in/gcfg.v1
+    - go get github.com/mattn/go-xmpp
+    - go get github.com/FabLabBerlin/easylab-lib
+    - go get github.com/FabLabBerlin/easylab-gw
+    - GOOS=linux GOARCH=386 go build -ldflags="-s -w" .
+    - upx --lzma ./easylab-gw
 
 release-amd64:
   stage: release
