@@ -1,0 +1,102 @@
+# Builds easylab-gw for amd64, armv5, armv6 and mips
+# and compresses the binary using UPX with LZMA compression,
+# to be useable on embedded platforms.
+
+# Source it from https://hub.docker.com/r/syso/easylab-env/
+image: syso/easylab-env
+
+stages:
+ - release
+
+cache:
+  paths:
+    - gopath/
+
+release-amd64:
+  stage: release
+  cache:
+    paths:
+      - gopath/
+      - node_modules/
+      - .glide/
+      - .npm/
+  artifacts:
+    paths:
+      - ./easylab-gw
+  script:
+    - export GOPATH=$CI_PROJECT_DIR/gopath/
+    - export GOROOT=/goroot
+    - apt-get update && apt-get install -y upx
+    - go get gopkg.in/gcfg.v1
+    - go get github.com/mattn/go-xmpp
+    - go get github.com/FabLabBerlin/easylab-lib
+    - go get github.com/FabLabBerlin/easylab-gw
+    - go build -ldflags="-s -w" .
+    - upx --lzma ./easylab-gw
+    
+release-armv5:
+  stage: release
+  cache:
+    paths:
+      - gopath/
+      - node_modules/
+      - .glide/
+      - .npm/
+  artifacts:
+    paths:
+      - ./easylab-gw
+  script:
+    - export GOPATH=$CI_PROJECT_DIR/gopath/
+    - export GOROOT=/goroot
+    - apt-get update && apt-get install -y upx
+    - go get gopkg.in/gcfg.v1
+    - go get github.com/mattn/go-xmpp
+    - go get github.com/FabLabBerlin/easylab-lib
+    - go get github.com/FabLabBerlin/easylab-gw
+    - GOOS=linux GOARCH=arm GOARM=5 go build -ldflags="-s -w" .
+    - upx --lzma ./easylab-gw
+
+release-armv7:
+  stage: release
+  cache:
+    paths:
+      - gopath/
+      - node_modules/
+      - .glide/
+      - .npm/
+  artifacts:
+    paths:
+      - ./easylab-gw
+  script:
+    - export GOPATH=$CI_PROJECT_DIR/gopath/
+    - export GOROOT=/goroot
+    - apt-get update && apt-get install -y upx
+    - go get gopkg.in/gcfg.v1
+    - go get github.com/mattn/go-xmpp
+    - go get github.com/FabLabBerlin/easylab-lib
+    - go get github.com/FabLabBerlin/easylab-gw
+    - GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="-s -w" .
+    - upx --lzma ./easylab-gw
+    
+release-mips:
+  stage: release
+  cache:
+    paths:
+      - gopath/
+      - node_modules/
+      - .glide/
+      - .npm/
+  artifacts:
+    paths:
+      - ./easylab-gw
+  script:
+    - export GOPATH=$CI_PROJECT_DIR/gopath/
+    - export GOROOT=/goroot
+    - apt-get update && apt-get install -y upx
+    - go get gopkg.in/gcfg.v1
+    - go get github.com/mattn/go-xmpp
+    - go get github.com/FabLabBerlin/easylab-lib
+    - go get github.com/FabLabBerlin/easylab-gw
+    - GOOS=linux GOARCH=mips go build -ldflags="-s -w" .
+    - upx --lzma ./easylab-gw
+
